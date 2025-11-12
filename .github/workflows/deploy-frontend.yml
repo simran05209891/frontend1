@@ -1,4 +1,4 @@
-name: Frontend CI/CD
+name: Frontend Deploy
 
 on:
   push:
@@ -6,34 +6,34 @@ on:
       - main
 
 jobs:
-  deploy-frontend:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Frontend Code
+      - name: ✅ Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: ✅ Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: ✅ Install Dependencies
         run: npm install
 
-      - name: Build Frontend
+      - name: ✅ Build React App
         run: npm run build
 
-      - name: Setup SSH
+      - name: ✅ Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Upload Build to Server
+      - name: ✅ Upload Build to Server
         run: |
-          ssh -o StrictHostKeyChecking=no simran@YOUR_SERVER_IP "rm -rf /var/www/frontend/*"
+          ssh -o StrictHostKeyChecking=no simran@YOUR_SERVER_IP "sudo rm -rf /var/www/frontend/*"
           scp -o StrictHostKeyChecking=no -r build/* simran@YOUR_SERVER_IP:/var/www/frontend/
 
-      - name: Reload Nginx
+      - name: ✅ Reload Nginx
         run: |
           ssh -o StrictHostKeyChecking=no simran@YOUR_SERVER_IP "sudo systemctl reload nginx"

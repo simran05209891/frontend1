@@ -31,9 +31,9 @@ jobs:
 
       - name: ✅ Upload Build to Server
         run: |
-          ssh -o StrictHostKeyChecking=no simran@YOUR_SERVER_IP "sudo rm -rf /var/www/frontend/*"
-          scp -o StrictHostKeyChecking=no -r build/* simran@YOUR_SERVER_IP:/var/www/frontend/
+          ssh -o StrictHostKeyChecking=no simran@122.160.115.189s "sudo rm -rf /var/www/frontend/*"
+          scp -o StrictHostKeyChecking=no -r build/* simran@122.160.115.189s:/var/www/frontend/
 
       - name: ✅ Reload Nginx
         run: |
-          ssh -o StrictHostKeyChecking=no simran@YOUR_SERVER_IP "sudo systemctl reload nginx"
+          ssh -o StrictHostKeyChecking=no simran@122.160.115.189s "sudo systemctl reload nginx"

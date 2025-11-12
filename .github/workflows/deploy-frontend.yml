@@ -9,6 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: .
+
     steps:
       - name: ✅ Checkout Code
         uses: actions/checkout@v3
@@ -31,9 +35,9 @@ jobs:
 
       - name: ✅ Upload Build to Server
         run: |
-          ssh -o StrictHostKeyChecking=no simran@122.160.115.189s "sudo rm -rf /var/www/frontend/*"
-          scp -o StrictHostKeyChecking=no -r build/* simran@122.160.115.189s:/var/www/frontend/
+          ssh -o StrictHostKeyChecking=no simran@122.160.115.189"sudo rm -rf /var/www/frontend/*"
+          scp -o StrictHostKeyChecking=no -r build/* simran@122.160.115.189:/var/www/frontend/
 
       - name: ✅ Reload Nginx
         run: |
-          ssh -o StrictHostKeyChecking=no simran@122.160.115.189s "sudo systemctl reload nginx"
+          ssh -o StrictHostKeyChecking=no simran@192.168.80.132 "sudo systemctl reload nginx"

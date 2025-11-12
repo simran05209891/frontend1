@@ -29,10 +29,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: ✅ Upload Build to Server
+          - name: ✅ Reload Nginx
         run: |
-          ssh -o StrictHostKeyChecking=no simran@122.160.115.189 "sudo rm -rf /var/www/frontend/*"
-          scp -o StrictHostKeyChecking=no -r build/* simran@122.160.115.189:/var/www/frontend/
+          ssh -o StrictHostKeyChecking=no simran@122.160.115.189 "sudo systemctl restart nginx"
+
 
             - name: ✅ Reload Nginx
         run: |

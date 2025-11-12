@@ -12,7 +12,7 @@ jobs:
     defaults:
       - name: Install dependencies
   run: npm install
-  working-directory: ./frontend 
+  working-directory: ./frontend1
 
     steps:
       - name: ✅ Checkout Code

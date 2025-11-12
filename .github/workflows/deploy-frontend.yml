@@ -10,8 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     defaults:
-      run:
-        working-directory: .
+      - name: Install dependencies
+  run: npm install
+  working-directory: ./frontend1 
 
     steps:
       - name: ✅ Checkout Code

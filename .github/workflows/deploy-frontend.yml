@@ -2,32 +2,34 @@ name: Frontend CI/CD
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout frontend code
+      - name: Checkout frontend
         uses: actions/checkout@v3
 
-      - name: Node setup
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install and build React app
-        working-directory: ./Client
-        run: |
-          npm install
-          npm run build
+      - name: Build frontend
+        run: npm run build
 
-      - name: Setup SSH
+      - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Upload build to server
         run: |
-          rsync -avz --delete build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.FRONTEND_PATH }}/build/
+          rsync -avz --delete \
+          ./build/ \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/simran/simran.project/Client/build/
+
+      - name: Reload nginx
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl reload nginx"

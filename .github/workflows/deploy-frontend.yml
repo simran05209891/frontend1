@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: ✅ Checkout Code
         uses: actions/checkout@v3
 
@@ -24,18 +25,21 @@ jobs:
       - name: ✅ Build React App
         run: npm run build
 
-      - name: ✅ Setup SSH
-        uses: webfactory/ssh-agent@v0.7.0
+      # ✅ Upload build folder using appleboy/ssh-action
+      - name: ✅ Upload Files To Server
+        uses: appleboy/scp-action@v0.1.7
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: "122.160.115.189"   # ✅ No mistake here
+          username: "simran"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "build/*"
+          target: "/var/www/frontend/"
 
-          - name: ✅ Reload Nginx
-        run: |
-          ssh -o StrictHostKeyChecking=no simran@122.160.115.189 "sudo systemctl restart nginx"
-
-
-            - name: ✅ Reload Nginx
-        run: |
-          ssh -o StrictHostKeyChecking=no simran@122.160.115.189 "sudo systemctl reload nginx"
-          sleep 2
-          ssh -o StrictHostKeyChecking=no simran@122.160.115.189 "sudo systemctl restart nginx"
+      - name: ✅ Restart Nginx
+        uses: appleboy/ssh-action@v1.0.2
+        with:
+          host: "122.160.115.189"
+          username: "simran"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo systemctl restart nginx

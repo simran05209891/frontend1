@@ -6,30 +6,34 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-frontend:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout frontend
+      - name: Checkout Frontend Code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
         run: npm install
 
-      - name: Build frontend
+      - name: Build Frontend
         run: npm run build
 
-      - name: Setup SSH agent
+      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Upload build to server
+      - name: Upload Build to Server
         run: |
-          rsync -avz --delete \
-          ./build/ \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/simran/simran.project/Client/build/
+          ssh -o StrictHostKeyChecking=no simran@YOUR_SERVER_IP "rm -rf /var/www/frontend/*"
+          scp -o StrictHostKeyChecking=no -r build/* simran@YOUR_SERVER_IP:/var/www/frontend/
 
-      - name: Reload nginx
+      - name: Reload Nginx
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl reload nginx"
+          ssh -o StrictHostKeyChecking=no simran@YOUR_SERVER_IP "sudo systemctl reload nginx"

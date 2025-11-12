@@ -18,6 +18,7 @@ jobs:
           node-version: 18
 
       - name: Install and build React app
+        working-directory: ./Client
         run: |
           npm install
           npm run build

@@ -36,4 +36,4 @@ jobs:
 
       - name: ✅ Reload Nginx
         run: |
-          ssh -o StrictHostKeyChecking=no simran@122.160.115.189 "sudo systemctl reload nginx"
+          ssh -o StrictHostKeyChecking=no simran@122.160.115.189 "sudo systemctl restart nginx"
